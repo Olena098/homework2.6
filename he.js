@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -7,17 +7,13 @@ const rl = readline.createInterface({
 });
 
 function hashPassword(password) {
-    const saltRounds = 10; 
-    bcrypt.hash(password, saltRounds, (err, hash) => { 
-        if (err) {
-            console.error("Помилка хешування пароля:", err);
-        } else {
-            console.log("Хеш пароля:", hash);
-            rl.close(); 
+    const hash = crypto.createHash('sha256');
+    hash.update(password);
+    rl.close(); 
+        return hash.digest('hex');
         }
-    });
-}
 
 rl.question("Введіть ваш пароль: ", (password) => {
-    hashPassword(password);
+    const hashedpassword = hashPassword(password);
+    console.log(hashedpassword);
 });
