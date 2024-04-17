@@ -1,5 +1,11 @@
 const bcrypt = require('bcrypt');
-const { prompt } = require('prompt-sync')();
+const readline = require('readline');
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
 function hashPassword(password) {
     const saltRounds = 10; 
     bcrypt.hash(password, saltRounds, (err, hash) => { 
@@ -7,9 +13,11 @@ function hashPassword(password) {
             console.error("Помилка хешування пароля:", err);
         } else {
             console.log("Хеш пароля:", hash);
+            rl.close(); 
         }
     });
 }
 
-const password = prompt("Введіть ваш пароль: ");
-hashPassword(password);
+rl.question("Введіть ваш пароль: ", (password) => {
+    hashPassword(password);
+});
